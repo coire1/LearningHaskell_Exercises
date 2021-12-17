@@ -23,7 +23,7 @@ import Prelude hiding (last,init,(!!))
 --    SUBMITTING, FAILURE TO DO SO WILL RESULT IN A MARK OF 0
 -- 4) REPLACE macid = "TODO" WITH YOUR ACTUAL MACID (EX. IF YOUR MACID IS jim THEN macid = "jim")
 -----------------------------------------------------------------------------------------------------------
-macid = "TODO"
+macid = "coire"
 
 -- NOTE: THE PRELUDE FUNCTIONS YOU'RE REQUIRED TO IMPLEMENT HAVE BEEN REMOVED, HOWEVER OTHER PRELUDE
 --       FUNCTIONS ARE STILL AVAILABLE, E.I. drop,take,reverse,head,tail,length,div
@@ -35,7 +35,7 @@ macid = "TODO"
 -- other available Prelude functions
 -----------------------------------------------------------------------------------------------------------
 last :: [a] -> a
-last xs = error "TODO implement init"
+last xs = head (reverse xs)
 
 -- Exercise B
 -----------------------------------------------------------------------------------------------------------
@@ -43,7 +43,8 @@ last xs = error "TODO implement init"
 -- combination of other available Prelude functions
 -----------------------------------------------------------------------------------------------------------
 init :: [a] -> [a]
-init xs = error "TODO implement init"
+-- init xs = reverse $ tail $ reverse xs
+init xs = take ((length xs) - 1) xs
 
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ init xs = error "TODO implement init"
 -- xs !! 4 == ERROR
 -----------------------------------------------------------------------------------------------------------
 (!!) :: [a] -> Int -> a
-xs !! n = error "TODO implement !!"
+xs !! n = head $ drop n xs
 
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
@@ -65,10 +66,10 @@ xs !! n = error "TODO implement !!"
 -- HINT: use the `div` function instead of / to do integer division when dividing the length of the list
 --       by 2, then take or drop those amount of elements from the list
 firstHalf :: [a] -> [a]
-firstHalf xs = error "TODO implement firstHalf"
+firstHalf xs = take ((length xs) `div` 2) xs
 
 lastHalf :: [a] -> [a]
-lastHalf xs = error "TODO implement lastHalf"
+lastHalf xs = drop ((length xs) `div` 2) xs
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
@@ -80,14 +81,17 @@ lastHalf xs = error "TODO implement lastHalf"
 --   inners [1,2,3,4] == [2,3]
 inners :: [a] -> [a]
 inners [] = []
-inners xs = error "TODO implement inners"
+inners xs = init $ tail xs
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
 -- Implement a function that computes the Euclidean distance in 2 dimensions of two points p and q
 -- See https://en.wikipedia.org/wiki/Euclidean_distance for details
+square :: Float -> Float
+square n = n * n
+
 distance :: (Float,Float) -> (Float,Float) -> Float
-distance (p1,p2) (q1,q2) = error "TODO implement distance"
+distance (p1,p2) (q1,q2) = sqrt $ (square (p1 - q1)) + (square (p2 - q2))
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
@@ -96,4 +100,4 @@ distance (p1,p2) (q1,q2) = error "TODO implement distance"
 -- NOTE: you have to use the ** operator instead of ^ when using floating point numbers for powers
 --       you'll also need fromIntegral to convert from integers to a floating point
 nthRoot :: Float -> Int -> Float
-nthRoot x n = error "TODO implement nthRoot"
+nthRoot x n = x ** (1 / (fromIntegral n))
