@@ -92,6 +92,7 @@ square n = n * n
 
 distance :: (Float,Float) -> (Float,Float) -> Float
 distance (p1,p2) (q1,q2) = sqrt $ (square (p1 - q1)) + (square (p2 - q2))
+-- distance (p1,p2) (q1,q2) = sqrt $ ((p1 - q1) ** 2) + ((p2 - q2) ** 2)
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------

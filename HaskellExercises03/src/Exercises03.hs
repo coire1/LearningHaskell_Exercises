@@ -31,9 +31,9 @@ macid = "TODO"
 -----------------------------------------------------------------------------------------------------------
 fib :: (Integral a) => a -> a
 fib n
-  | n <= 0 = error "TODO implement fib"
-  | n == 1 = error "TODO implement fib"
-  | otherwise = error "TODO implement fib"
+  | n <= 0 = 0
+  | n == 1 = 1
+  | otherwise = fib (n - 1) + fib (n - 2)
 
 -- Exercise B
 -----------------------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ data Tree a = Node a (Tree a) (Tree a)
    deriving (Show,Eq)
 
 exTree :: Tree Char
-exTree = error "TODO implement exTree"
+exTree = Node 'd' (Node 'b' (Leaf 'a') (Leaf 'c')) (Node 'f' (Leaf 'e') (Leaf 'g'))
 
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
@@ -59,9 +59,13 @@ exTree = error "TODO implement exTree"
 data Nat = Zero | Succ Nat
          deriving (Show,Eq)
 
+add :: Nat -> Nat -> Nat
+add Zero n = n
+add (Succ m) n = Succ (add m n)
+
 mult :: Nat -> Nat -> Nat
-mult Zero n     = error "TODO implement mult"
-mult (Succ m) n = error "TODO implement mult"
+mult Zero n     = Zero
+mult (Succ m) n = add n (mult m n)
 
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
@@ -69,8 +73,30 @@ mult (Succ m) n = error "TODO implement mult"
 -- NOTE: this means for every Node v t0 t1, v is >= all values in tree t0 and v is < all values in tree t1
 --       start by defining functions that test if a value is less/greater than all the values in a tree
 -----------------------------------------------------------------------------------------------------------
+isLessTree :: Ord a => a -> Tree a -> Bool
+isLessTree m (Leaf n)       = m <= n
+isLessTree m (Node n t1 t2) = m <= n
+                            && isLessTree m t1
+                            && isLessTree m t2
+{-
+isLessTree m (Leaf n)       = m < n
+isLessTree m (Node n t1 t2) = m < n
+                            && isLessTree m t1
+                            && isLessTree m t2
+ -}
+
+isGreaterTree :: Ord a => a -> Tree a -> Bool
+isGreaterTree m (Leaf n)       = m >= n
+isGreaterTree m (Node n t1 t2) = m >= n
+                               && isGreaterTree m t1
+                               && isGreaterTree m t2
+
 isSearchTree :: Ord a => Tree a -> Bool
-isSearchTree tree = error "TODO implement isSearchTree"
+isSearchTree (Leaf n)       = True
+isSearchTree (Node m t1 t2) = isGreaterTree m t1
+                            && isLessTree m t2
+                            && isSearchTree t1
+                            && isSearchTree t2
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
@@ -79,7 +105,7 @@ isSearchTree tree = error "TODO implement isSearchTree"
 -- NOTE using list comprehension gives a pretty neat solution
 -----------------------------------------------------------------------------------------------------------
 factors :: Int -> [Int]
-factors n = error "TODO implement factors"
+factors n = filter (\x -> (n `div` x) == 0) [1..n]
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
@@ -90,4 +116,4 @@ factors n = error "TODO implement factors"
 -- NOTE using list comprehensions gives a pretty neat solution
 -----------------------------------------------------------------------------------------------------------
 pivot :: Ord a => a -> [a] -> ([a],[a])
-pivot v xs = error "TODO implement pivot"
+pivot v xs = ((filter (\x -> x <= v) xs),(filter (\x -> x > v) xs))
