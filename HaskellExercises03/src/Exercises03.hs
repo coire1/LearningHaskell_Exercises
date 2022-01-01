@@ -105,7 +105,8 @@ isSearchTree (Node m t1 t2) = isGreaterTree m t1
 -- NOTE using list comprehension gives a pretty neat solution
 -----------------------------------------------------------------------------------------------------------
 factors :: Int -> [Int]
-factors n = filter (\x -> (n `div` x) == 0) [1..n]
+-- factors n = filter (\x -> (n `div` x) == 0) [1..n]
+factors n = [ x | x <- [2..n-1], (n `mod` x) == 0]
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
@@ -116,4 +117,5 @@ factors n = filter (\x -> (n `div` x) == 0) [1..n]
 -- NOTE using list comprehensions gives a pretty neat solution
 -----------------------------------------------------------------------------------------------------------
 pivot :: Ord a => a -> [a] -> ([a],[a])
-pivot v xs = ((filter (\x -> x <= v) xs),(filter (\x -> x > v) xs))
+--pivot v xs = ((filter (\x -> x <= v) xs),(filter (\x -> x > v) xs))
+pivot v xs = ([ x | x <- xs, x <= v], [ x | x <- xs, x > v])

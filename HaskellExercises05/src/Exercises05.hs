@@ -38,7 +38,9 @@ split :: [a] -> ([a],[a])
 split xs =
   let
     half = length xs `div` 2
-    split' xs (y:ys) n = error "TODO implement split'"
+    split' xs (y:ys) n = if n > 0
+                          then split' (xs ++ [y]) ys (n - 1)
+                          else (xs, (y:ys))
     split' xs [] n = (xs,[])
    in split' [] xs half
 
@@ -49,8 +51,19 @@ split xs =
 -- them together in to a sorted list
 -----------------------------------------------------------------------------------------------------------
 merge :: (Ord a) => [a] -> [a] -> [a]
-merge xs ys = error "TODO implement merge"
+merge [] ys = ys
+merge xs [] = xs
+merge (x:xs) (y:ys) = merge (merge' (x:xs) y) ys
+{- merge (x:xs) (y:ys)
+        | x <= y     = [x] ++ merge xs (y:ys)
+        | otherwise  = [y] ++ merge (x:xs) ys
+-}
 
+merge' :: (Ord a) => [a] -> a -> [a]
+merge' []     y = [y]
+merge' (x:xs) y
+        | x >= y = [y] ++ (x:xs)
+        | x <  y = [x] ++ merge' xs y
 -- Exercise C
 -----------------------------------------------------------------------------------------------------------
 -- Implement the function mergeSort that sorts a list by recusively splitting a list, and merging
@@ -58,7 +71,12 @@ merge xs ys = error "TODO implement merge"
 -- NOTE singleton and empty lists are already sorted
 -----------------------------------------------------------------------------------------------------------
 mergeSort :: (Ord a) => [a] -> [a]
-mergeSort xs = error "TODO implement mergeSort"
+mergeSort []  = []
+mergeSort [x] = [x]
+mergeSort xs  =
+    let
+      (as,bs) = split xs
+    in merge (mergeSort as) (mergeSort bs)
 
 -- Exercise D
 -----------------------------------------------------------------------------------------------------------
@@ -67,7 +85,8 @@ mergeSort xs = error "TODO implement mergeSort"
 --      quickCheck (sortProp . mergeSort)
 -----------------------------------------------------------------------------------------------------------
 sortProp :: (Ord a) => [a] -> Bool
-sortProp xs = error "TODO implement sortProp"
+sortProp (x1:x2:xs) = (x2 >= x1) && sortProp (x2:xs)
+sortProp _          = True
 
 -- Exercise E
 -----------------------------------------------------------------------------------------------------------
@@ -75,7 +94,9 @@ sortProp xs = error "TODO implement sortProp"
 -- replicates that element n times
 -----------------------------------------------------------------------------------------------------------
 replicate :: Int -> a -> [a]
-replicate n x = error "TODO implement replicate"
+replicate n x
+  | n > 0  = x : replicate (n - 1) x
+  | otherwise = []
 
 -- Exercise F
 -----------------------------------------------------------------------------------------------------------
@@ -83,7 +104,10 @@ replicate n x = error "TODO implement replicate"
 -- NOTE throw an error when indexing out of bounds
 -----------------------------------------------------------------------------------------------------------
 (!!) :: [a] -> Int -> a
-(!!) xs n = error "TODO implement !!"
+(!!) (x:xs) n
+    | n > length xs = error "Out of bounds"
+    | n > 0 = xs !! (n-1)
+    | otherwise = x
 
 -- Exercise G
 -----------------------------------------------------------------------------------------------------------
@@ -91,4 +115,11 @@ replicate n x = error "TODO implement replicate"
 -- is an element of the list
 -----------------------------------------------------------------------------------------------------------
 elem :: (Eq a) => a -> [a] -> Bool
-elem e xs = error "TODO implement elem"
+{-
+elem e []     = False
+elem e (x:xs) = (e == x) || elem e xs
+-}
+elem e [] = False
+elem e (x:xs)
+  | e == x = True
+  | otherwise = elem e xs
